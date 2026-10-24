@@ -1,119 +1,153 @@
-# Project-Spring26
+# SpeakMaster AI 🎙️
 
+> **An AI-powered English pronunciation trainer and intelligent dictionary built with Dynamic Programming, Trie data structure, OpenAI Whisper, and SQL Server.**
 
-1. Thành viên 1: Database Logic (database.py) (Hiếu)
+---
 
+## 📌 Overview
 
-•	Nhiệm vụ: Quản lý mọi thứ liên quan đến lưu trữ lâu dài.
-•	Công việc cụ thể:
-o	Cài đặt SQL Server và thư viện pyodbc.
-o	Viết code tạo bảng (Users, History).
-o	Viết hàm save_practice_result(user_id, target, user_text, score) để chèn dữ liệu.
-o	Viết hàm load_history(user_id) trả về một danh sách để hiển thị lên bảng Gradio.
-•  Hàm register_user(username, password):
-•	Kiểm tra xem username đã tồn tại trong bảng Users chưa.
-•	Nếu chưa, thực hiện câu lệnh INSERT INTO Users (Username, Password) VALUES (?, ?).
-•  Hàm login_user(username, password):
-•	Thực hiện câu lệnh SELECT UserID FROM Users WHERE Username = ? AND Password = ?.
-•	Nếu tìm thấy, trả về UserID để các module khác (như Lịch sử) sử dụng. Nếu không, trả về None.
+**SpeakMaster AI** is an interactive, full-stack educational desktop/web application inspired by Elsa Speak. The project combines state-of-the-art speech recognition with foundational Data Structures and Algorithms (DSA) to deliver real-time pronunciation assessment, phoneme alignment, autocomplete word suggestion, and personalized progress tracking.
 
-•	Mục tiêu: Đảm bảo dữ liệu không bị mất khi tắt ứng dụng.
+Developed as a collaborative academic project for the **Data Structures and Algorithms (DSA)** curriculum (Spring 2026), SpeakMaster emphasizes **ground-up algorithm implementations** (such as dynamic programming for Levenshtein distance and prefix trees for autocompletion) rather than relying exclusively on black-box external packages.
 
-2. Thành viên 2: Comparison Algorithm (algorithm.py) (QUY)
+---
 
+## ✨ Key Features
 
-•	Nhiệm vụ: Xây dựng bộ máy chấm điểm bằng thuật toán DSA.
-•	Công việc cụ thể:
-o	Tự code thuật toán Levenshtein Distance bằng phương pháp mảng 2 chiều (Quy hoạch động).
-o	Viết hàm get_pronunciation_score(s1, s2) nhận vào 2 chuỗi văn bản và trả về số điểm (0-100).
-o	Viết thêm logic để so sánh từng từ và đánh dấu màu (ví dụ: từ nào đúng trả về màu xanh, sai trả về màu đỏ).
-•	Mục tiêu: Trả về kết quả phân tích chính xác độ lệch giữa câu mẫu và câu người dùng nói.
+- 🎧 **AI-Powered Pronunciation Evaluation**:
+  - Utilizes **OpenAI Whisper** for robust speech-to-text recognition directly from microphone input.
+  - Generates clear, native audio models for comparison via **gTTS** (Google Text-to-Speech).
+  - Converts text to International Phonetic Alphabet (**IPA**) phonemes using `eng_to_ipa`.
 
+- ⚡ **DSA Core Algorithms (In-House Implementations)**:
+  - **Dynamic Programming (Levenshtein Distance)**: Word-level edit distance algorithm implemented with a 2D dynamic programming matrix.
+  - **Traceback & Visual Diff**: Backtracking alignment that visualizes pronunciation accuracy with color-coded feedback (🟢 Correct, 🔴 Mispronounced/Missing).
+  - **Prefix Tree (Trie)**: High-performance autocomplete engine storing 10,000+ English words for instant search suggestions ($O(L)$ prefix lookup complexity).
 
-3. Thành viên 3: Suggestion Engine (search_engine.py)  (ĐĂNG KHOA)
+- 📖 **Comprehensive English - Vietnamese Dictionary**:
+  - Fast SQL-backed dictionary querying over 25,000+ definitions, phonetic notations, word classes, and usage examples.
+  - Instant autocomplete search bar with fast interactive suggestions.
 
+- 🔐 **Account & History Management**:
+  - Secure user registration and login protected with **SHA-256** password hashing.
+  - Stores all attempts, audio similarity metrics, and historical scores in **Microsoft SQL Server** via dedicated stored procedures.
 
-•	Nhiệm vụ: Xử lý cấu trúc dữ liệu cây để hỗ trợ người dùng nhập liệu.
-•	Công việc cụ thể:
-o	Cài đặt cấu trúc dữ liệu Trie (Cây tiền tố).
-o	Viết hàm insert_word(word) và hàm get_suggestions(prefix).
-o	Tìm một danh sách khoảng 500-1000 từ tiếng Anh thông dụng, viết code để nạp danh sách này vào cây Trie khi khởi động.
-•	Mục tiêu: Khi người dùng gõ từ vào ô tìm kiếm, cây Trie phải trả về danh sách các từ bắt đầu bằng chữ cái đó một cách nhanh nhất.
+- 🎨 **Modern & Responsive UI**:
+  - Sleek interface built with **Gradio** and custom CSS inspired by modern e-learning platforms.
+  - Visual circle gauge for overall score, formatted lexical cards, and floating interactive animations.
 
-
-4. Thành viên 4: Speech & AI Handler (speech_module.py) (KHOA BÉO)
-
-•	Nhiệm vụ: Phụ trách phần "Nghe" và "Nói" của AI.
-•	Công việc cụ thể:
-o	Tích hợp OpenAI Whisper (dùng bản base hoặc tiny cho nhẹ) để chuyển ghi âm thành văn bản.
-o	Tích hợp gTTS để tạo giọng đọc mẫu cho câu tiếng Anh.
-o	Viết hàm clean_text(text) để loại bỏ dấu câu, chuyển về chữ thường trước khi đưa cho Thành viên 2 chấm điểm.
-•	Mục tiêu: Chuyển đổi qua lại giữa âm thanh và văn bản một cách mượt mà.
-
-
-5. Thành viên 5: UI Designer (interface.py) (PHÚ ANH)
-
-
-•	Nhiệm vụ: Xây dựng "mặt tiền" của ứng dụng.
-•	Công việc cụ thể:
-o	Sử dụng Gradio tạo 3 Tab: Luyện tập, Tra từ, Lịch sử.
-o	Tạo các thành phần: gr.Audio (ghi âm), gr.Textbox (nhập văn bản), gr.Dataframe (hiển thị lịch sử), gr.HTML (hiển thị điểm số vòng tròn).
-o	Viết CSS để giao diện trông hiện đại và chuyên nghiệp (căn giữa các thành phần, đổi màu nút bấm).
-•	Mục tiêu: Tạo ra một giao diện hoàn chỉnh, dù hiện tại các nút bấm chỉ đang gọi đến các hàm "giả" (dummy functions).
+---
 
 
 
-6. Thành viên 6: Dictionary & Logic Integrator (dictionary_logic.py) (TRƯỜNG)
 
+## 📂 Project Structure
 
-•	Nhiệm vụ: Xử lý dữ liệu từ điển và chuẩn bị cho việc ghép nối.
-•	Công việc cụ thể:
-o	Tìm và xử lý file dữ liệu từ điển (thường là JSON hoặc CSV Anh-Việt).
-o	Viết hàm lookup_word(word) trả về nghĩa, loại từ và ví dụ.
-o	Viết các hàm xử lý trung gian (ví dụ: chuyển đổi điểm số từ con số sang nhận xét "Tốt", "Cần cố gắng").
+```text
+Project-Spring26/
+├── algorithm.py                  # Custom Levenshtein DP & visual alignment algorithm
+├── app.py                        # Main Gradio application entry point
+├── auth.py                       # User authentication and password hash management
+├── database.py                   # SQL Server connector & stored procedure wrapper
+├── dictionary_logic.py           # SQL dictionary querying & word definition retriever
+├── history.py                    # History logging and user practice retrieval
+├── logic.py                      # Integration layer connecting Whisper, IPA, & DP scoring
+├── search_engine.py              # Prefix Tree (Trie) autocomplete implementation
+├── research_engine.py            # Extended Trie engine with benchmarks & documentation
+├── speech_module.py              # OpenAI Whisper & gTTS audio handler
+├── ui_components.py              # Custom CSS styles, components, and HTML formatters
+├── setup_database.sql            # Database creation script with schemas & stored procedures
+├── setup_dictionary_db.py        # ETL script importing CSV lexicon to SQL Server
+├── google-10000-english-usa.txt  # Frequency dictionary corpus for Trie indexing
+├── English - Vietnamese.csv      # Bilingual dictionary dataset
+├── requirement.txt               # Project Python package dependencies
+└── README.md                     # Project documentation
+```
 
+---
 
+## ⚙️ Installation & Setup
 
-DEADLINE: 28/2/2026
+### 1. Prerequisites
 
+- **Python**: Version `3.10` or higher.
+- **Microsoft SQL Server**: Local instance (e.g., SQL Express or Developer edition).
+- **ODBC Driver**: [ODBC Driver 17 for SQL Server](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server).
+- **FFmpeg**: Required by Whisper and pydub for audio processing.
+  - *Windows*: Download from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/), extract, and add the `bin` directory to your `System PATH`.
 
-====Kết quả=========
-Sản phẩm (Elsa Clone)
-Các bạn sẽ có một ứng dụng hoàn chỉnh với các tính năng:
-1.	Hệ thống tài khoản: Đăng ký, đăng nhập bảo mật bằng SQL Server.
-2.	Luyện tập AI: Chấm điểm phát âm chính xác dựa trên thuật toán và trí tuệ nhân tạo.
-3.	Từ điển thông minh: Gợi ý từ khi gõ (Autocomplete) và tra cứu nghĩa nhanh chóng.
-4.	Báo cáo tiến độ: Xem lại lịch sử luyện tập và điểm số cá nhân
+### 2. Clone the Repository
 
+```bash
+git clone https://github.com/truonggg123/Project-Spring26.git
+cd Project-Spring26
+```
 
-===================================================================
+### 3. Create a Virtual Environment & Install Dependencies
 
-Ba file code ban đầu bạn gửi đóng vai trò là "Proof of Concept" (Bản mẫu thử nghiệm). Chúng chứng minh rằng ý tưởng này khả thi, nhưng để trở thành một project môn học đạt điểm cao, nhóm bạn sẽ bóc tách và tái cấu trúc lại chúng thành một hệ thống chuyên nghiệp hơn.
-Dưới đây là cách nhóm bạn sẽ "tiến hóa" từ 3 file đó sang 6 module độc lập:
-1. Sự thay đổi về cấu trúc (Architecture)
-•	3 file cũ: Code trộn lẫn giữa giao diện (Gradio), logic chấm điểm và lưu trữ (file JSON). Điều này khiến việc làm việc nhóm rất khó vì ai sửa vào file nào cũng dễ làm hỏng phần của người khác.
-•	6 file mới: Mỗi người là một "ông chủ" của một file riêng.
-o	Thành viên 4 sẽ lấy phần Whisper và gTTS từ file cũ để đưa vào speech_module.py.
-o	Thành viên 5 sẽ lấy phần layout Gradio để đưa vào interface.py.
-o	Thành viên 2 sẽ không dùng thư viện có sẵn nữa mà tự viết thuật toán vào algorithm.py.
-________________________________________
-2. Sự nâng cấp về chất lượng (Quality)
-Các bạn không chỉ "chép lại" code cũ mà là nâng cấp nó để đáp ứng yêu cầu của giảng viên:
-•	Từ JSON sang SQL Server: File history.py cũ dùng JSON (rất dễ bị mất dữ liệu hoặc lỗi nếu nhiều người cùng ghi). Thành viên 1 sẽ nâng cấp nó lên SQL Server, cho phép quản lý hàng ngàn người dùng và lịch sử luyện tập một cách an toàn.
-•	Từ thư viện sang Thuật toán tự thân: File logic.py cũ dùng thư viện Levenshtein. Thành viên 2 sẽ tự code thuật toán này bằng Quy hoạch động. Đây là phần giúp bạn lấy điểm môn DSA.
-•	Thêm cấu trúc dữ liệu mới: Code cũ không có gợi ý từ vựng. Thành viên 3 sẽ thêm cây Trie để tối ưu hóa trải nghiệm người dùng, giúp app "thông minh" hơn.
-________________________________________
-3. Quy trình làm việc thực tế của nhóm
-Nhóm bạn sẽ coi 3 file cũ như một bản thiết kế mẫu để hiểu luồng đi:
-1.	Tham khảo logic.py để biết cách lấy text từ Whisper rồi đem đi so sánh.
-2.	Tham khảo app.py để biết cách sắp xếp các component trên màn hình.
-3.	Xây dựng mới: Mỗi thành viên viết file của mình dựa trên các gợi ý nhiệm vụ chi tiết ở trên.
-________________________________________
-4. Thành quả cuối cùng so với bản gốc
-Sản phẩm cuối cùng của nhóm bạn sẽ vượt xa 3 file ban đầu:
-•	Có Bảo mật (Đăng nhập/Đăng ký).
-•	Có Hiệu năng (Tìm kiếm bằng Trie).
-•	Có Độ tin cậy (Dữ liệu lưu trong SQL Server).
-•	Có Học thuật (Thuật toán tự cài đặt).
-Lời khuyên: Hãy giữ 3 file cũ đó để chạy thử và hiểu "cảm giác" của ứng dụng trước. Sau đó, mỗi thành viên bắt tay vào viết file độc lập của mình.
+```bash
+# Create virtual environment
+python -m venv venv
 
+# Activate virtual environment
+# Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# Windows (cmd):
+.\venv\Scripts\activate.bat
+# Linux/macOS:
+source venv/bin/activate
+
+# Install required packages
+pip install -r requirement.txt
+```
+
+### 4. Database Setup
+
+1. Open **SQL Server Management Studio (SSMS)** or execute `setup_database.sql` via `sqlcmd`:
+   ```bash
+   sqlcmd -S localhost -E -i setup_database.sql
+   ```
+2. *(One-time)* Import the English - Vietnamese dictionary into SQL Server:
+   ```bash
+   python setup_dictionary_db.py
+   ```
+
+### 5. Environment Configuration
+
+You can configure connection parameters via environment variables or use the default local values:
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `DICT_SQL_SERVER` | `localhost\SQLEXPRESS03` | SQL Server host / instance name |
+| `DICT_SQL_DATABASE` | `PronunciationDB` | Database name |
+| `MOCK_MODE` | `false` | Set to `true` to bypass Whisper and speed up UI testing |
+
+### 6. Run the Application
+
+```bash
+python app.py
+```
+
+After starting, navigate to your web browser at:
+```text
+http://127.0.0.1:7860
+```
+
+---
+
+## 🧪 Development & Mock Mode
+
+For development machines without a dedicated GPU or when working strictly on UI/database logic, you can enable **Mock Mode**:
+
+```powershell
+$env:MOCK_MODE="true"
+python app.py
+```
+
+This bypasses OpenAI Whisper model loading while preserving all navigation, dictionary, and account functionality.
+
+---
+
+## 📜 Academic Note
+
+This project is submitted in fulfillment of the coursework requirements for **Project-Spring26**. All core algorithmic elements—including the **2D DP matrix for string editing** and the **Trie structure for prefix search**—were designed and implemented from scratch by the project team.
